@@ -1,10 +1,23 @@
+import { useMemo } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ErrorMessage } from '../components/common/ErrorMessage';
 
+// Strict sandbox for desktop: blocks popups and all navigation (full ad blocking)
+const DESKTOP_SANDBOX = 'allow-scripts allow-same-origin allow-forms allow-presentation';
+// Relaxed sandbox for mobile: allows popups needed for video playback, still blocks top navigation
+const MOBILE_SANDBOX =
+  'allow-scripts allow-same-origin allow-forms allow-presentation allow-popups allow-popups-to-escape-sandbox allow-modals';
+
 export const PlayerPage = () => {
   const navigate = useNavigate();
   const { type, id, season, episode } = useParams();
+
+  const isMobile = useMemo(() => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+  }, []);
 
   const embedUrl =
     type === 'movie'
@@ -33,7 +46,7 @@ export const PlayerPage = () => {
         className="h-full w-full border-0"
         allow="autoplay; fullscreen; picture-in-picture"
         allowFullScreen
-        sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-popups allow-popups-to-escape-sandbox allow-modals"
+        sandbox={isMobile ? MOBILE_SANDBOX : DESKTOP_SANDBOX}
         referrerPolicy="no-referrer"
       />
     </div>
