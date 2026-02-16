@@ -7,7 +7,7 @@ import { ErrorMessage } from '../components/common/ErrorMessage';
 const DESKTOP_SANDBOX = 'allow-scripts allow-same-origin allow-forms allow-presentation';
 // Relaxed sandbox for mobile: allows popups needed for video playback, still blocks top navigation
 const MOBILE_SANDBOX =
-  'allow-scripts allow-same-origin allow-forms allow-presentation allow-popups allow-popups-to-escape-sandbox allow-modals';
+  'allow-scripts allow-same-origin allow-forms allow-presentation allow-popups allow-popups-to-escape-sandbox allow-modals allow-top-navigation'; //allow-top-navigation
 
 export const PlayerPage = () => {
   const navigate = useNavigate();
