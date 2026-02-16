@@ -33,7 +33,7 @@ export const PlayerPage = () => {
         className="h-full w-full border-0"
         allow="autoplay; fullscreen; picture-in-picture"
         allowFullScreen
-        sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-popups allow-popups-to-escape-sandbox allow-modals"
         referrerPolicy="no-referrer"
       />
     </div>
