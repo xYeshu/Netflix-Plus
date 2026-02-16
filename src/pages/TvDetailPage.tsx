@@ -17,6 +17,16 @@ export const TvDetailPage = () => {
 
   const seasonQuery = useTvSeasonDetails(id, selectedSeason, !!tvQuery.data);
 
+  // Sync selected season with available seasons — must be called before any returns
+  // to comply with React's Rules of Hooks (hooks must run in the same order every render).
+  useEffect(() => {
+    if (!tvQuery.data) return;
+    const validSeasons = tvQuery.data.seasons.filter((season) => season.season_number > 0);
+    if (!validSeasons.some((season) => season.season_number === selectedSeason)) {
+      setSelectedSeason(validSeasons[0]?.season_number ?? 1);
+    }
+  }, [selectedSeason, tvQuery.data]);
+
   if (tvQuery.isLoading) {
     return <LoadingSkeleton className="m-6 h-[75vh]" />;
   }
@@ -26,13 +36,6 @@ export const TvDetailPage = () => {
   }
 
   const show = tvQuery.data;
-
-  useEffect(() => {
-    const validSeasons = show.seasons.filter((season) => season.season_number > 0);
-    if (!validSeasons.some((season) => season.season_number === selectedSeason)) {
-      setSelectedSeason(validSeasons[0]?.season_number ?? 1);
-    }
-  }, [selectedSeason, show.seasons]);
 
   return (
     <div>
@@ -85,11 +88,10 @@ export const TvDetailPage = () => {
               <button
                 key={season.id}
                 onClick={() => setSelectedSeason(season.season_number)}
-                className={`rounded px-4 py-2 text-sm font-semibold transition ${
-                  selectedSeason === season.season_number
+                className={`rounded px-4 py-2 text-sm font-semibold transition ${selectedSeason === season.season_number
                     ? 'bg-netflix-red text-white'
                     : 'bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
-                }`}
+                  }`}
               >
                 Season {season.season_number}
               </button>
