@@ -5,9 +5,6 @@ import { ErrorMessage } from '../components/common/ErrorMessage';
 
 // Strict sandbox for desktop: blocks popups and all navigation (full ad blocking)
 const DESKTOP_SANDBOX = 'allow-scripts allow-same-origin allow-forms allow-presentation';
-// Relaxed sandbox for mobile: allows popups needed for video playback, still blocks top navigation
-const MOBILE_SANDBOX =
-  'allow-scripts allow-same-origin allow-forms allow-presentation allow-popups allow-popups-to-escape-sandbox allow-modals allow-top-navigation'; //allow-top-navigation
 
 export const PlayerPage = () => {
   const navigate = useNavigate();
@@ -31,22 +28,22 @@ export const PlayerPage = () => {
   }
 
   return (
-    <div className="relative h-screen w-screen bg-black">
+    <div className="relative h-screen h-[100dvh] w-screen bg-black">
       <button
         onClick={() => navigate(-1)}
-        className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded bg-black/70 px-4 py-2 text-sm font-semibold text-white backdrop-blur hover:bg-black"
+        className="glass absolute left-3 top-3 z-20 inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-white/15 active:scale-95 sm:left-4 sm:top-4 sm:text-sm"
       >
-        <FaArrowLeft />
+        <FaArrowLeft className="text-[10px]" />
         Back
       </button>
 
       <iframe
         src={embedUrl}
-        title="Vidking Player"
+        title="Netflix+ Player"
         className="h-full w-full border-0"
         allow="autoplay; fullscreen; picture-in-picture"
         allowFullScreen
-        sandbox={isMobile ? MOBILE_SANDBOX : DESKTOP_SANDBOX}
+        {...(!isMobile && { sandbox: DESKTOP_SANDBOX })}
         referrerPolicy="no-referrer"
       />
     </div>

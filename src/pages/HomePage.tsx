@@ -17,14 +17,19 @@ export const HomePage = () => {
   const comedyMovies = useMoviesByGenre(35);
 
   return (
-    <div className="pb-10">
-      <Hero item={trending.data?.[0]} isLoading={trending.isLoading} />
-      <MediaRow title="Trending Movies" items={trending.data} isLoading={trending.isLoading} />
-      <MediaRow title="Popular Movies" items={popularMovies.data} isLoading={popularMovies.isLoading} />
-      <MediaRow title="Popular TV Shows" items={popularTV.data} isLoading={popularTV.isLoading} />
-      <MediaRow title="Top Rated Movies" items={topRatedMovies.data} isLoading={topRatedMovies.isLoading} />
-      <MediaRow title="Action Movies" items={actionMovies.data} isLoading={actionMovies.isLoading} />
-      <MediaRow title="Comedy Movies" items={comedyMovies.data} isLoading={comedyMovies.isLoading} />
+    <div className="pb-12 sm:pb-16">
+      <div className="pt-3 sm:pt-4">
+        <Hero item={trending.data?.[0]} isLoading={trending.isLoading} />
+      </div>
+
+      <div className="mt-4 space-y-1 sm:mt-6 sm:space-y-2">
+        <MediaRow title="Trending Now" items={trending.data} isLoading={trending.isLoading} />
+        <MediaRow title="Popular Movies" items={popularMovies.data} isLoading={popularMovies.isLoading} />
+        <MediaRow title="Popular TV Shows" items={popularTV.data} isLoading={popularTV.isLoading} />
+        <MediaRow title="Top Rated" items={topRatedMovies.data} isLoading={topRatedMovies.isLoading} />
+        <MediaRow title="Action & Adventure" items={actionMovies.data} isLoading={actionMovies.isLoading} />
+        <MediaRow title="Comedy" items={comedyMovies.data} isLoading={comedyMovies.isLoading} />
+      </div>
     </div>
   );
 };

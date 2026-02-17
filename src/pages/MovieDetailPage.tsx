@@ -1,4 +1,4 @@
-import { FaPlay } from 'react-icons/fa';
+import { FaPlay, FaStar } from 'react-icons/fa';
 import { Link, useParams } from 'react-router-dom';
 import { ErrorMessage } from '../components/common/ErrorMessage';
 import { LoadingSkeleton } from '../components/common/LoadingSkeleton';
@@ -13,7 +13,7 @@ export const MovieDetailPage = () => {
   const recommendationsQuery = useMovieRecommendations(id);
 
   if (movieQuery.isLoading) {
-    return <LoadingSkeleton className="m-6 h-[75vh]" />;
+    return <LoadingSkeleton className="m-4 h-[75vh] rounded-2xl sm:m-6" />;
   }
 
   if (movieQuery.isError || !movieQuery.data) {
@@ -23,58 +23,81 @@ export const MovieDetailPage = () => {
   const movie = movieQuery.data;
 
   return (
-    <div>
-      <section className="relative min-h-[60vh]">
+    <div className="animate-fade-in">
+      {/* Hero Backdrop */}
+      <section className="relative min-h-[55vh] sm:min-h-[60vh]">
         {movie.backdrop_path ? (
           <img
             src={getBackdropUrl(movie.backdrop_path, 'original') ?? ''}
             alt={movie.title}
-            className="h-[60vh] w-full object-cover"
+            className="h-[55vh] w-full object-cover sm:h-[60vh]"
           />
         ) : (
-          <div className="h-[60vh] w-full bg-zinc-800" />
+          <div className="h-[55vh] w-full bg-brand-surface sm:h-[60vh]" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-netflix-bg via-black/70 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-bg via-brand-bg/70 to-brand-bg/20" />
 
-        <div className="absolute bottom-0 mx-auto grid w-full max-w-[1400px] grid-cols-1 items-end gap-6 px-4 pb-8 sm:px-6 md:grid-cols-[280px_1fr]">
+        <div className="absolute bottom-0 mx-auto grid w-full max-w-[1400px] grid-cols-1 items-end gap-5 px-4 pb-6 sm:px-6 sm:pb-8 md:grid-cols-[250px_1fr] md:gap-8">
+          {/* Poster */}
           <div className="hidden md:block">
             {movie.poster_path ? (
               <img
                 src={getPosterUrl(movie.poster_path) ?? ''}
                 alt={movie.title}
-                className="rounded-lg shadow-glow"
+                className="rounded-xl shadow-glow ring-1 ring-white/10"
               />
             ) : null}
           </div>
 
-          <div>
-            <h1 className="mb-3 text-3xl font-bold sm:text-5xl">{movie.title}</h1>
-            <p className="mb-3 text-sm text-zinc-300 sm:text-base">
-              {getYearFromDate(movie.release_date)} • {movie.runtime} min • ⭐ {formatRating(movie.vote_average)}
-            </p>
-            <p className="mb-3 text-sm text-zinc-200">{movie.genres.map((genre) => genre.name).join(' • ')}</p>
-            <p className="max-w-3xl text-sm text-zinc-100 sm:text-base">{movie.overview}</p>
+          {/* Info */}
+          <div className="animate-fade-up">
+            <h1 className="mb-2.5 text-2xl font-black tracking-tight sm:text-4xl md:text-5xl">{movie.title}</h1>
+
+            <div className="mb-3 flex flex-wrap items-center gap-2 text-sm text-brand-muted">
+              <span>{getYearFromDate(movie.release_date)}</span>
+              <span className="text-white/20">•</span>
+              <span>{movie.runtime} min</span>
+              <span className="text-white/20">•</span>
+              <span className="flex items-center gap-1 text-brand-gold">
+                <FaStar className="text-[10px]" />
+                {formatRating(movie.vote_average)}
+              </span>
+            </div>
+
+            <div className="mb-3 flex flex-wrap gap-1.5">
+              {movie.genres.map((genre) => (
+                <span key={genre.id} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-brand-muted">
+                  {genre.name}
+                </span>
+              ))}
+            </div>
+
+            <p className="mb-5 max-w-3xl text-sm leading-relaxed text-white/75 sm:text-base">{movie.overview}</p>
 
             <Link
               to={`/player/movie/${movie.id}`}
-              className="mt-6 inline-flex items-center gap-2 rounded bg-netflix-red px-6 py-3 font-semibold text-white transition hover:bg-red-700"
+              className="inline-flex items-center gap-2.5 rounded-xl bg-brand-accent px-7 py-3 text-sm font-bold text-white shadow-glow-sm transition-all duration-300 hover:bg-brand-accent-hover hover:shadow-glow active:scale-95"
             >
-              <FaPlay />
+              <FaPlay className="text-xs" />
               Play Movie
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-[1600px] px-4 py-8 sm:px-6">
-        <h2 className="mb-4 text-2xl font-semibold">Recommended Movies</h2>
+      {/* Recommendations */}
+      <section className="mx-auto w-full max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10">
+        <div className="mb-4 flex items-center gap-3">
+          <div className="h-5 w-1 rounded-full bg-brand-accent" />
+          <h2 className="text-lg font-semibold tracking-tight sm:text-xl">Recommended Movies</h2>
+        </div>
 
         {recommendationsQuery.isLoading ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-            <LoadingSkeleton className="h-[225px] sm:h-[270px]" count={6} />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
+            <LoadingSkeleton className="aspect-[2/3]" count={6} />
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
             {recommendationsQuery.data?.slice(0, 12).map((item) => <MovieCard key={item.id} item={item} />)}
           </div>
         )}

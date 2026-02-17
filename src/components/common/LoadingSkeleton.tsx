@@ -8,7 +8,7 @@ export const LoadingSkeleton = ({ className = '', count = 1 }: LoadingSkeletonPr
     {Array.from({ length: count }).map((_, index) => (
       <div
         key={`skeleton-${index}`}
-        className={`animate-pulse rounded-md bg-zinc-800/90 ${className}`}
+        className={`skeleton-shimmer rounded-xl ${className}`}
       />
     ))}
   </>
