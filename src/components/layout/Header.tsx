@@ -90,7 +90,7 @@ export const Header = () => {
           <span className="text-gradient text-xl font-black tracking-tight sm:text-2xl">
             Netflix+
           </span>
-          <span className="hidden text-[10px] font-medium tracking-widest text-brand-muted uppercase sm:inline">
+          <span className="text-[10px] font-medium tracking-widest text-brand-muted uppercase">
             by Yeshu
           </span>
         </Link>
