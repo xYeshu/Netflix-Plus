@@ -3,18 +3,40 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ErrorMessage } from '../components/common/ErrorMessage';
 
-// Strict sandbox for desktop: blocks popups and all navigation (full ad blocking)
-const DESKTOP_SANDBOX = 'allow-scripts allow-same-origin allow-forms allow-presentation';
+// Strict sandbox: blocks popups and all navigation (full ad blocking)
+const AD_BLOCK_SANDBOX = 'allow-scripts allow-same-origin allow-forms allow-presentation';
 
 export const PlayerPage = () => {
   const navigate = useNavigate();
   const { type, id, season, episode } = useParams();
 
-  const isMobile = useMemo(() => {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    );
+  // ============================================================
+  // DEVICE DETECTION
+  // ============================================================
+
+  const isIOS = useMemo(() => {
+    return /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   }, []);
+
+  const isAndroid = useMemo(() => {
+    return /Android/i.test(navigator.userAgent);
+  }, []);
+
+  // ============================================================
+  // AD BLOCK TOGGLE
+  // Set to true to DISABLE sandbox ad blocking for that device.
+  // ============================================================
+  const skipIOS = true;       // change to: isIOS  (if iOS sandbox breaks)
+  const skipAndroid = false;    // change to: isAndroid
+  const skipDesktop = false;    // change to: true
+
+  const skipAdBlock =
+    (skipIOS && isIOS) ||
+    (skipAndroid && isAndroid) ||
+    (skipDesktop && !isIOS && !isAndroid);
+
+  // ============================================================
 
   const embedUrl =
     type === 'movie'
@@ -28,23 +50,23 @@ export const PlayerPage = () => {
   }
 
   return (
-    <div className="relative h-screen h-[100dvh] w-screen bg-black">
+    <div className="relative h-screen w-screen bg-black">
       <button
         onClick={() => navigate(-1)}
-        className="glass absolute left-3 top-3 z-20 inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-white/15 active:scale-95 sm:left-4 sm:top-4 sm:text-sm"
+        className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded bg-black/70 px-4 py-2 text-sm font-semibold text-white backdrop-blur hover:bg-black"
       >
-        <FaArrowLeft className="text-[10px]" />
+        <FaArrowLeft />
         Back
       </button>
 
       <iframe
         src={embedUrl}
-        title="Netflix+ Player"
+        title="Vidking Player"
         className="h-full w-full border-0"
-        allow="autoplay; fullscreen; picture-in-picture"
+        allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
         allowFullScreen
-        {...(!isMobile && { sandbox: DESKTOP_SANDBOX })}
-        referrerPolicy="no-referrer"
+        {...(!skipAdBlock && { sandbox: AD_BLOCK_SANDBOX })}
+        {...(!skipAdBlock && { referrerPolicy: 'no-referrer' as const })}
       />
     </div>
   );
