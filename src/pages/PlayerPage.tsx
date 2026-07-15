@@ -27,9 +27,9 @@ export const PlayerPage = () => {
   // AD BLOCK TOGGLE
   // Set to true to DISABLE sandbox ad blocking for that device.
   // ============================================================
-  const skipIOS = false;       // change to: isIOS  (if iOS sandbox breaks)
-  const skipAndroid = false;    // change to: isAndroid
-  const skipDesktop = false;    // change to: true
+  const skipIOS = true;       // change to: isIOS  (if iOS sandbox breaks)
+  const skipAndroid = true;    // change to: isAndroid
+  const skipDesktop = true;    // change to: true
 
   const skipAdBlock =
     (skipIOS && isIOS) ||
